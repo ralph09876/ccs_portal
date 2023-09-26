@@ -16,9 +16,28 @@
                             <input type="text" name="monitor_sn" class="form-control form-control-sm">
                         </div>
                         <div class="form-group">
-                            <label for="" class="control-label">Model</label>
-                            <input type="text" name="model" class="form-control form-control-sm">
-                        </div>
+    <label for="" class="control-label">Model</label>
+    <select name="model" id="model_id" style="width:100%; height: 40px;">
+        <?php
+        $sql = "SELECT modelname FROM model";
+        $result = $conn->query($sql);
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $modelname = $row['modelname'];
+                echo "<option value=\"$modelname\">$modelname</option>";
+            }
+        } else {
+            echo '<option value="">No models found</option>';
+        }
+        ?>
+        <option value="other">Other</option>
+    </select>
+    <div class="form-group">
+        <label for="" id="othermodellabel" class="control-label">Other</label>
+        <input type="text" name="model" id="othermodel" class="form-control form-control-sm">
+    </div>
+</div>
                         <div class="form-group">
                             <label for="" class="control-label">Brand</label>
                             <select name="brand" id="category_id" style="width:100%; height: 40px;">
@@ -153,6 +172,18 @@
 </style>
 <script>
     $(document).ready(function () {
+        $('#othermodel').hide();
+$('#othermodellabel').hide();
+
+$('#model_id').change(function () {
+    if ($(this).val() === 'other') {
+        $('#othermodellabel').show();
+        $('#othermodel').show();
+    } else {
+        $('#othermodellabel').hide();
+        $('#othermodel').hide();
+    }
+});
         $('#otherbrand').hide();
         $('#otherbrandlabel').hide();
 
@@ -193,6 +224,17 @@
 
         // Handle form submission
         $('#itemForm').submit(function (event) {
+            event.preventDefault();
+    var selectedModel = $('#model_id').val();
+    var modelValue;
+
+    if (selectedModel === 'other') {
+        modelValue = $('#othermodel').val();
+    } else {
+        modelValue = selectedModel;
+    }
+
+    $('input[name="model"]').val(modelValue);
             event.preventDefault();
             var selectedCategory = $('#category_id').val();
             var brandValue;

@@ -27,47 +27,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Close the statement
     $stmt->close();
 
-
-
-
-    $checkCategorySql = "SELECT * FROM category WHERE categoryname = ?";
-    $checkCategoryStmt = $conn->prepare($checkCategorySql);
-    $checkCategoryStmt->bind_param('s', $brand);
-    $checkCategoryStmt->execute();
-    $checkCategoryResult = $checkCategoryStmt->get_result();
-
-    if ($checkCategoryResult->num_rows === 0) {
-       
-        $sql2 = "INSERT INTO category (categoryname) VALUES (?)";
-
+    $checkModelSql = "SELECT * FROM model WHERE modelname = ?";
+    $checkModelStmt = $conn->prepare($checkModelSql);
+    $checkModelStmt->bind_param('s', $model);
+    $checkModelStmt->execute();
+    $checkModelResult = $checkModelStmt->get_result();
+    
+    if ($checkModelResult->num_rows === 0) {
+        // Model doesn't exist, insert it into the 'model' table
+        $sql2 = "INSERT INTO model (modelname) VALUES (?)";
+    
         $stmt2 = $conn->prepare($sql2);
-
-        $stmt2->bind_param('s', $brand);
+    
+        $stmt2->bind_param('s', $model);
         $stmt2->execute();
-
-
+    
         $stmt2->close();
     }
-
-    $checkCategorySql2 = "SELECT * FROM categorylist WHERE categorylistname = ?";
+    
+    $checkCategorySql2 = "SELECT * FROM category WHERE categoryname = ?";
     $checkCategoryStmt2 = $conn->prepare($checkCategorySql2);
-    $checkCategoryStmt2 ->bind_param('s', $category);
+    $checkCategoryStmt2->bind_param('s', $brand);
     $checkCategoryStmt2->execute();
-    $checkCategoryResult2 = $checkCategoryStmt2 ->get_result();
+    $checkCategoryResult2 = $checkCategoryStmt2->get_result();
 
     if ($checkCategoryResult2->num_rows === 0) {
        
-        $sql3 = "INSERT INTO categorylist (categorylistname) VALUES (?)";
+        $sql3 = "INSERT INTO category (categoryname) VALUES (?)";
 
         $stmt3 = $conn->prepare($sql3);
 
-        $stmt3->bind_param('s', $category);
+        $stmt3->bind_param('s', $brand);
         $stmt3->execute();
 
 
         $stmt3->close();
     }
 
+    $checkCategorySql4 = "SELECT * FROM categorylist WHERE categorylistname = ?";
+    $checkCategoryStmt4 = $conn->prepare($checkCategorySql4);
+    $checkCategoryStmt4 ->bind_param('s', $category);
+    $checkCategoryStmt4->execute();
+    $checkCategoryResult4 = $checkCategoryStmt4 ->get_result();
+
+    if ($checkCategoryResult4->num_rows === 0) {
+       
+        $sql5 = "INSERT INTO categorylist (categorylistname) VALUES (?)";
+
+        $stmt5 = $conn->prepare($sql5);
+
+        $stmt5->bind_param('s', $category);
+        $stmt5->execute();
+
+
+        $stmt5->close();
+    }
     echo "Item Added ";
 }
 ?>
